@@ -35,11 +35,11 @@ jobs:
             "region": "${{ secrets.AWS_REGION }}"
           }' > /tmp/state.config
 
+      - name: Upload Backend Config to S3
+        run: aws s3 cp /tmp/state.config s3://${{ secrets.TF_STATE_BUCKET }}/${{ secrets.PROJECT_NAME }}/state.config
+
       - name: Terraform Init
-        run: |
-          echo State config file:
-          cat /tmp/state.config
-          terraform init -backend-config="/tmp/state.config"
+        run: terraform init -backend-config="/tmp/state.config"
 
       - name: Terraform Apply
         id: apply
