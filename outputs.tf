@@ -19,5 +19,6 @@ output "ftp_username" {
 }
 
 output "ftp_password" {
-  value = random_password.ftp_password.result
+  value     = random_password.ftp_password.result
+  sensitive = true
 }
