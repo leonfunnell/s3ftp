@@ -53,6 +53,7 @@ The following input variable is required:
 2. Add the following secrets to your GitHub repository:
     - `AWS_ACCESS_KEY_ID`: Your AWS access key ID.
     - `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
+    - `AWS_REGION`: The AWS region (e.g., "eu-west-2").
     - `PROJECT_NAME`: The name of the project.
 
 3. Push changes to the `main` branch to trigger the GitHub Actions workflow.
