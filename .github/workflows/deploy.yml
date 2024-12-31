@@ -28,26 +28,30 @@ jobs:
           terraform_version: 1.0.0
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" \
+                           -backend-config="key=${{ secrets.PROJECT_NAME }}/terraform.tfstate" \
+                           -backend-config="region=${{ secrets.AWS_REGION }}"
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -var="project_name=${{ secrets.PROJECT_NAME }}"
+        run: terraform apply -auto-approve \
+             -var="project_name=${{ secrets.PROJECT_NAME }}" \
+             -var="tf_state_bucket=${{ secrets.TF_STATE_BUCKET }}"
 
       - name: Capture Outputs
         id: outputs
         run: |
           terraform output -json > /tmp/tf_outputs.json
-          echo "s3_bucket_name=$(jq -r '.s3_bucket_name.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
-          echo "ftp_server_url=$(jq -r '.ftp_server_url.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
-          echo "ftp_server_address=$(jq -r '.ftp_server_address.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
-          echo "ftp_username=$(jq -r '.ftp_username.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
-          echo "ftp_password=$(jq -r '.ftp_password.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
+          echo "s3_bucket_name=$(jq -r '.s3_bucket_name.value' /tmp/tf_outputs.json)"  >> $GITHUB_STATE
+          echo "ftp_server_url=$(jq -r '.ftp_server_url.value' /tmp/tf_outputs.json)" >> $GITHUB_STATE
+          echo "ftp_server_address=$(jq -r '.ftp_server_address.value' /tmp/tf_outputs.json)" >> $GITHUB_STATE
+          echo "ftp_username=$(jq -r '.ftp_username.value' /tmp/tf_outputs.json)" >> $GITHUB_STATE
+          echo "ftp_password=$(jq -r '.ftp_password.value' /tmp/tf_outputs.json)" >> $GITHUB_STATE
 
       - name: Output Results
         run: |
-          echo "S3 Bucket Name: $s3_bucket_name"
-          echo "FTP Server URL: $ftp_server_url"
-          echo "FTP Server Address: $ftp_server_address"
-          echo "FTP Username: $ftp_username"
-          echo "FTP Password: $ftp_password"
+          echo "S3 Bucket Name: $s3_bucket_name" >> $GITHUB_OUTPUT
+          echo "FTP Server URL: $ftp_server_url" >> $GITHUB_OUTPUT
+          echo "FTP Server Address: $ftp_server_address" >> $GITHUB_OUTPUT
+          echo "FTP Username: $ftp_username" >> $GITHUB_OUTPUT
+          echo "FTP Password: $ftp_password" >> $GITHUB_OUTPUT

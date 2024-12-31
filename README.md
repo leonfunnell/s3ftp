@@ -9,9 +9,10 @@ This Terraform configuration sets up an S3 bucket, an EC2 instance running an FT
 
 ## Configuration
 
-The following input variable is required:
+The following input variables are required:
 
 - `project_name`: The name of the project. This will be used to prefix the S3 bucket name and other resources.
+- `tf_state_bucket`: (Optional) The name of the S3 bucket where Terraform state is stored.
 
 ## Usage
 
@@ -55,6 +56,7 @@ The following input variable is required:
     - `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
     - `AWS_REGION`: The AWS region (e.g., "eu-west-2").
     - `PROJECT_NAME`: The name of the project.
+    - `TF_STATE_BUCKET` (the S3 bucket for Terraform state - must exist already).
 
 3. Push changes to the `main` branch to trigger the GitHub Actions workflow.
 

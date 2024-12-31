@@ -8,3 +8,8 @@ variable "aws_region" {
   type        = string
   default     = "eu-west-2"
 }
+
+variable "tf_state_bucket" {
+  type        = string
+  description = "S3 bucket name to store Terraform state"
+}

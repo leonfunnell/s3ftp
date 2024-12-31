@@ -1,5 +1,21 @@
+terraform {
+  backend "s3" {
+    bucket = var.tf_state_bucket
+    key    = "${var.project_name}/terraform.tfstate"
+    region = var.aws_region
+  }
+}
+
 provider "aws" {
   region = var.aws_region
+}
+
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "aws_subnet_ids" "default" {
+  vpc_id = data.aws_vpc.default.id
 }
 
 resource "random_string" "bucket_suffix" {
@@ -8,7 +24,7 @@ resource "random_string" "bucket_suffix" {
 }
 
 resource "aws_s3_bucket" "project_bucket" {
-  bucket = "${var.project_name}-${random_string.bucket_suffix.result}"
+  bucket = "${lower(var.project_name)}-${random_string.bucket_suffix.result}"
 }
 
 resource "aws_iam_role" "ftp_role" {
@@ -87,6 +103,7 @@ resource "random_integer" "ftp_port" {
 resource "aws_security_group" "ftp_sg" {
   name        = "${var.project_name}_ftp_sg"
   description = "Allow FTP access"
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     from_port   = random_integer.ftp_port.result
@@ -104,11 +121,12 @@ resource "aws_security_group" "ftp_sg" {
 }
 
 resource "aws_instance" "ftp_server" {
-  ami           = "ami-0c55b159cbfafe1f0" // Ubuntu Server 20.04 LTS (HVM), SSD Volume Type
-  instance_type = "t2.micro"
+  ami                    = "ami-0c55b159cbfafe1f0" // Ubuntu Server 20.04 LTS (HVM), SSD Volume Type
+  instance_type          = "t2.micro"
+  subnet_id              = data.aws_subnet_ids.default.ids[0]
+  vpc_security_group_ids = [aws_security_group.ftp_sg.id]
 
   iam_instance_profile = aws_iam_instance_profile.ftp_instance_profile.name
-  security_groups      = [aws_security_group.ftp_sg.name]
 
   user_data = <<-EOF
               #!/bin/bash
