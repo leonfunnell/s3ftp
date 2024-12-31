@@ -29,14 +29,16 @@ jobs:
 
       - name: Generate Backend Config
         run: |
-          echo '{
-            "bucket": "${{ secrets.TF_STATE_BUCKET }}",
-            "key": "${{ secrets.PROJECT_NAME }}/terraform.tfstate",
-            "region": "${{ secrets.AWS_REGION }}"
-          }' > /tmp/state.config
+          echo 'terraform {
+            backend "s3" {
+              bucket = "${{ secrets.TF_STATE_BUCKET }}"
+              key    = "${{ secrets.PROJECT_NAME }}/terraform.tfstate"
+              region = "${{ secrets.AWS_REGION }}"
+            }
+          }' > backend.tf
 
       - name: Upload Backend Config to S3
-        run: aws s3 cp /tmp/state.config s3://${{ secrets.TF_STATE_BUCKET }}/${{ secrets.PROJECT_NAME }}/state.config
+        run: aws s3 cp backend.tf s3://${{ secrets.TF_STATE_BUCKET }}/${{ secrets.PROJECT_NAME }}/backend.tf
 
       - name: Terraform Init
         run: terraform init
