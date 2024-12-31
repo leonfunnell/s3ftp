@@ -36,7 +36,10 @@ jobs:
           }' > /tmp/state.config
 
       - name: Terraform Init
-        run: terraform init -backend-config="/tmp/state.config"
+        run: |
+          echo State config file:
+          cat /tmp/state.config
+          terraform init -backend-config="/tmp/state.config"
 
       - name: Terraform Apply
         id: apply
