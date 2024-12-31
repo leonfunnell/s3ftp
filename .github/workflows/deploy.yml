@@ -46,7 +46,7 @@ jobs:
       - name: Terraform Apply
         id: apply
         run: terraform apply -auto-approve \
-             -var="project_name=${{ secrets.PROJECT_NAME }}" 
+             -var "project_name=${{ secrets.PROJECT_NAME }}" \
 
       - name: Capture Outputs
         id: outputs
