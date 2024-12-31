@@ -4,6 +4,7 @@ output "s3_bucket_name" {
 
 output "ftp_credentials" {
   value = aws_secretsmanager_secret_version.ftp_credentials_version.secret_string
+  sensitive = true
 }
 
 output "ftp_server_url" {
