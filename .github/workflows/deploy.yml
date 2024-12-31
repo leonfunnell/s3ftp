@@ -39,7 +39,7 @@ jobs:
         run: aws s3 cp /tmp/state.config s3://${{ secrets.TF_STATE_BUCKET }}/${{ secrets.PROJECT_NAME }}/state.config
 
       - name: Terraform Init
-        run: terraform init -backend-config="/tmp/state.config"
+        run: terraform init
 
       - name: Terraform Apply
         id: apply
