@@ -9,6 +9,7 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
+    environment: prod  # Use the environment that has the AWS_REGION secret
 
     steps:
       - name: Checkout code
