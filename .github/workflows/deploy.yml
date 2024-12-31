@@ -1,0 +1,35 @@
+name: Deploy Terraform
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve -var="project_name=${{ secrets.PROJECT_NAME }}"
+
+      - name: Output Results
+        run: |
+          echo "S3 Bucket Name: ${{ steps.apply.outputs.s3_bucket_name }}"
+          echo "FTP Server URL: ${{ steps.apply.outputs.ftp_server_url }}"
+          echo "FTP Server Address: ${{ steps.apply.outputs.ftp_server_address }}"
+          echo "FTP Username: ${{ steps.apply.outputs.ftp_username }}"
+          echo "FTP Password: ${{ steps.apply.outputs.ftp_password }}"

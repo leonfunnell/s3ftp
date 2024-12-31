@@ -15,6 +15,8 @@ The following input variable is required:
 
 ## Usage
 
+### Local Deployment
+
 1. Clone this repository and navigate to the directory:
 
     ```sh
@@ -43,6 +45,17 @@ The following input variable is required:
     - `ftp_server_address`: The public IP address of the FTP server.
     - `ftp_username`: The username for FTP access.
     - `ftp_password`: The password for FTP access.
+
+### GitHub Actions Deployment
+
+1. Fork this repository to your GitHub account.
+
+2. Add the following secrets to your GitHub repository:
+    - `AWS_ACCESS_KEY_ID`: Your AWS access key ID.
+    - `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
+    - `PROJECT_NAME`: The name of the project.
+
+3. Push changes to the `main` branch to trigger the GitHub Actions workflow.
 
 ## Outputs
 
