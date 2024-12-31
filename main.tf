@@ -52,6 +52,11 @@ resource "aws_iam_role_policy_attachment" "ftp_policy_attachment" {
   policy_arn = aws_iam_policy.ftp_policy.arn
 }
 
+resource "aws_iam_instance_profile" "ftp_instance_profile" {
+  name = "${var.project_name}_ftp_instance_profile"
+  role = aws_iam_role.ftp_role.name
+}
+
 resource "aws_secretsmanager_secret" "ftp_credentials" {
   name = "${var.project_name}_ftp_credentials"
 }

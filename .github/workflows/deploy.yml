@@ -26,10 +26,20 @@ jobs:
         id: apply
         run: terraform apply -auto-approve -var="project_name=${{ secrets.PROJECT_NAME }}"
 
+      - name: Capture Outputs
+        id: outputs
+        run: |
+          terraform output -json > /tmp/tf_outputs.json
+          echo "s3_bucket_name=$(jq -r '.s3_bucket_name.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
+          echo "ftp_server_url=$(jq -r '.ftp_server_url.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
+          echo "ftp_server_address=$(jq -r '.ftp_server_address.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
+          echo "ftp_username=$(jq -r '.ftp_username.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
+          echo "ftp_password=$(jq -r '.ftp_password.value' /tmp/tf_outputs.json)" >> $GITHUB_ENV
+
       - name: Output Results
         run: |
-          echo "S3 Bucket Name: ${{ steps.apply.outputs.s3_bucket_name }}"
-          echo "FTP Server URL: ${{ steps.apply.outputs.ftp_server_url }}"
-          echo "FTP Server Address: ${{ steps.apply.outputs.ftp_server_address }}"
-          echo "FTP Username: ${{ steps.apply.outputs.ftp_username }}"
-          echo "FTP Password: ${{ steps.apply.outputs.ftp_password }}"
+          echo "S3 Bucket Name: $s3_bucket_name"
+          echo "FTP Server URL: $ftp_server_url"
+          echo "FTP Server Address: $ftp_server_address"
+          echo "FTP Username: $ftp_username"
+          echo "FTP Password: $ftp_password"
