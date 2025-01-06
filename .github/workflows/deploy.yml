@@ -43,11 +43,17 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform Refresh
+        run: terraform refresh
+
       - name: Terraform Apply
         env:
           TF_VAR_project_name: ${{ secrets.PROJECT_NAME }}
         id: apply
         run: terraform apply -auto-approve
+
+      - name: Upload SSH Key to S3
+        run: aws s3 cp ssh_key.pem s3://${{ secrets.TF_STATE_BUCKET }}/${{ secrets.PROJECT_NAME }}/ssh_key.pem
 
       - name: Capture Outputs
         id: outputs

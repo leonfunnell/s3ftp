@@ -9,6 +9,7 @@ output "ftp_credentials" {
 
 output "ftp_server_url" {
   value = "ftp://${random_string.ftp_username.result}:${random_password.ftp_password.result}@${aws_instance.ftp_server.public_ip}:${random_integer.ftp_port.result}"
+  sensitive = true
 }
 
 output "ftp_server_address" {
@@ -17,9 +18,28 @@ output "ftp_server_address" {
 
 output "ftp_username" {
   value = random_string.ftp_username.result
+  sensitive = true
 }
 
 output "ftp_password" {
   value     = random_password.ftp_password.result
   sensitive = true
 }
+
+output "ftp_port" {
+  value = random_integer.ftp_port.result
+}
+
+output "project_name" {
+  value = var.project_name
+}
+
+output "tf_state_bucket" {
+  value = var.tf_state_bucket
+}
+
+output "aws_region" {
+  value = var.aws_region
+}
+
+
