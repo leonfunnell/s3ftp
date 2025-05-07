@@ -51,7 +51,7 @@ The following input variables are required:
 
 1. Fork this repository to your GitHub account.
 
-2. Add the following secrets to your GitHub repository or prod environment:
+2. Add the following secrets to your GitHub Actions Secrets (under settings in Github):
     - `AWS_ACCESS_KEY_ID`: Your AWS access key ID.
     - `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
     - `AWS_REGION`: The AWS region (e.g., "eu-west-2").
